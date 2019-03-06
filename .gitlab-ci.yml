@@ -1,0 +1,117 @@
+image: docker.slock.it/build-images/node:10-alpine
+
+stages:
+  - build
+  - package
+  - deploy
+
+ui-build:
+  stage: build
+  tags:
+    - ci2
+  script:
+    - sh /prepare.sh
+    - npm install
+    - npm install -g webpack webpack-cli
+    - CI="" webpack
+  artifacts:
+    name: build-ui
+    paths:
+      - dist/
+      - node_modules/
+
+ui-build-gitlab:
+  stage: build
+  tags:
+    - ci2
+  only:
+    - 4-sonnen
+  script:
+    - sh /prepare.sh
+    - npm install
+    - npm install -g webpack webpack-cli
+    - CI="" webpack
+  artifacts:
+    name: build-ui-gitlab
+    paths:
+      - dist/
+      - node_modules/ew-asset-registry-contracts
+      - node_modules/ew-asset-registry-lib
+      - node_modules/ew-market-contracts
+      - node_modules/ew-market-lib
+      - node_modules/ew-origin-contracts
+      - node_modules/ew-origin-lib
+      - node_modules/ew-utils-general-lib
+
+docker-package:
+  stage: package
+  tags:
+    - short-jobs
+  image: docker
+  dependencies:
+    - ui-build
+  services:
+    - docker:dind
+  script:
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+    - docker build -t $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME .
+    - docker tag $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME $CI_REGISTRY_IMAGE:latest
+    - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
+    - docker push $CI_REGISTRY_IMAGE:latest
+
+deploy-to-stage:
+    stage: deploy
+    tags:
+      - short-jobs
+    only:
+      - 4-sonnen
+    image: markuskeil/docker-and-rancher
+    services:
+      - docker:dind
+    script:
+      - rancher-compose -p ${CI_PROJECT_PATH_SLUG}-sonnen up -p -d -c --force-upgrade
+
+
+push-to-github:
+  stage: deploy
+  variables:
+    GITHUB_REPO_NAME: ew-asset-registry-frontend
+    GIT_STRATEGY: clone
+  only:
+    - '/^v\d+\.\d+\.\d+\-release$/'
+  tags:
+    - short-jobs
+  script:
+    - CLEAN_VERSION=`echo "$CI_COMMIT_TAG"|sed s/-release//`
+    - echo "using $CLEAN_VERSION as version"
+    - echo -e "$CI_SSH_KEY" > /gitkey
+    - chmod 0400 /gitkey
+    - export GIT_SSH_COMMAND="/usr/bin/ssh -o StrictHostKeyChecking=no -i /gitkey"
+    - git remote add external git@github.com:energywebfoundation/${GITHUB_REPO_NAME}.git
+    - git push --force external HEAD:refs/heads/master
+    - git tag | grep -v '\-release' | xargs git tag --delete 
+    - git tag $CLEAN_VERSION
+    - git push --force external --tag $CLEAN_VERSION
+    - rm /gitkey
+
+
+push-to-public-git:
+  stage: deploy
+  only:
+    - 4-sonnen
+  tags:
+    - short-jobs
+  dependencies:
+    - ui-build-gitlab
+  script:
+    - echo -e "$CI_SSH_KEY_SLOCKIT" > /gitkey
+    - chmod 0400 /gitkey
+    - export GIT_SSH_COMMAND="/usr/bin/ssh -o StrictHostKeyChecking=no -oPort=2222 -i /gitkey"
+    - git remote add external git@public-git.slock.it:sonnen/sonnen-ui.git
+    - git config --global user.email "ci-bot@slock.it"
+    - git config --global user.name "Slock.it CI Robot"
+    - rm .gitignore
+    - git add node_modules
+    - git commit -am "[AUTO] add artifacts"
+    - git push --force external HEAD:refs/heads/master
+    - git push --force --tags external

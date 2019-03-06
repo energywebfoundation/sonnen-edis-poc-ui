@@ -1,0 +1,8 @@
+{
+    "name": "Market Contract",
+    "dependencies": {
+        "ew-asset-registry-contracts": "https://git.slock.it/ewf/origin/asset-registry/ew-asset-registry-contracts#6-sonnen-pilot",
+        "ew-user-registry-contracts": "https://git.slock.it/ewf/origin/user-registry/ew-user-registry-contracts",
+        "ew-utils-general-contracts": "https://git.slock.it/ewf/origin/utils/ew-utils-general-contracts"
+    }
+}
