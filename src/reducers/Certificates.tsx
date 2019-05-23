@@ -1,4 +1,4 @@
-import * as OriginIssuer from 'ew-origin-lib';
+import * as OriginIssuer from 'ew-origin-lib-sonnen';
 import { Actions } from '../actions/index'
 
 const defaultState = [];

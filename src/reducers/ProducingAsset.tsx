@@ -1,4 +1,4 @@
-import * as EwAsset from 'ew-asset-registry-lib'; 
+import * as EwAsset from 'ew-asset-registry-lib-sonnen'; 
 import { Actions } from '../actions/index';
 
 const defaultState = [];

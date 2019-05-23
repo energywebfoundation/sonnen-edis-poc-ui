@@ -1,4 +1,5 @@
 ### macOS template
 # General
 *.DS_Store
-
+node_modules
+!node_modules/ew-origin-lib

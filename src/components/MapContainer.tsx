@@ -19,7 +19,7 @@ import * as React from 'react';
 import { withScriptjs, withGoogleMap, GoogleMap, Marker } from 'react-google-maps';
 import { APIKEY } from './GoogleApiKey';
 import './DetailView.scss';
-import * as EwAsset from 'ew-asset-registry-lib';
+import * as EwAsset from 'ew-asset-registry-lib-sonnen';
 export interface MapDetailProps {
     asset: EwAsset.Asset.Entity;
 }

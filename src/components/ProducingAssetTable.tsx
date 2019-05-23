@@ -18,10 +18,10 @@
 import * as React from 'react';
 
 import * as General from 'ew-utils-general-lib';
-import * as OriginIssuer from 'ew-origin-lib';
+import * as OriginIssuer from 'ew-origin-lib-sonnen';
 import * as Market from 'ew-market-lib';
 import * as EwUser from 'ew-user-registry-lib';
-import * as EwAsset from 'ew-asset-registry-lib';
+import * as EwAsset from 'ew-asset-registry-lib-sonnen';
 import { OrganizationFilter } from './OrganizationFilter';
 import { BrowserRouter, Route, Link, NavLink, Redirect } from 'react-router-dom';
 import { Nav } from 'react-bootstrap';

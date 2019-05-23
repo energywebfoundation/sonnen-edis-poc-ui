@@ -26,10 +26,10 @@ import solar from '../../assets/icon_solar.svg';
 import moment from 'moment';
 import { BrowserRouter, Route, Link } from 'react-router-dom';
 import * as General from 'ew-utils-general-lib';
-import * as OriginIssuer from 'ew-origin-lib';
+import * as OriginIssuer from 'ew-origin-lib-sonnen';
 import * as Market from 'ew-market-lib';
 import * as EwUser from 'ew-user-registry-lib';
-import * as EwAsset from 'ew-asset-registry-lib';
+import * as EwAsset from 'ew-asset-registry-lib-sonnen';
 import { MapContainer } from './MapContainer';
 
 import './DetailView.scss';
