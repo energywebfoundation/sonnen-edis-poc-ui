@@ -188,7 +188,7 @@ export class AppContainer extends React.Component<AppContainerProps, {}> {
         return {
             blockchainProperties,
             offChainDataSource: {
-                baseUrl: 'http://localhost:3030'
+                baseUrl: API_BASE_URL
             },
 
             logger: null
