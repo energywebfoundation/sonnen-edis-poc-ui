@@ -32,14 +32,16 @@ import { Asset } from './Asset';
 import * as queryString from 'query-string';
 import './AppContainer.scss';
 import * as General from 'ew-utils-general-lib';
-import * as OriginIssuer from 'ew-origin-lib';
+import * as OriginIssuer from 'ew-origin-lib-sonnen';
 import * as Market from 'ew-market-lib';
-import * as EwAsset from 'ew-asset-registry-lib';
+import { ProducingAsset, createBlockchainProperties, ConsumingAsset } from "ew-asset-registry-lib-sonnen";
 import * as EwUser from 'ew-user-registry-lib';
 
 interface AppContainerProps extends StoreState {
     actions: Actions;
 }
+
+const API_BASE_URL = 'http://localhost:3030';
 
 export class AppContainer extends React.Component<AppContainerProps, {}> {
 
@@ -116,7 +118,7 @@ export class AppContainer extends React.Component<AppContainerProps, {}> {
 
         assetContractEventHandler.onEvent('LogNewMeterRead', async (event: any) =>
             this.props.actions.producingAssetCreatedOrUpdated(
-                await (new EwAsset.ProducingAsset.Entity(
+                await (new ProducingAsset.Entity(
                     event.returnValues._assetId,
                     this.props.configuration
                 ).sync())
@@ -126,7 +128,7 @@ export class AppContainer extends React.Component<AppContainerProps, {}> {
 
         assetContractEventHandler.onEvent('LogAssetFullyInitialized', async (event: any) =>
             this.props.actions.producingAssetCreatedOrUpdated(
-                await (new EwAsset.ProducingAsset.Entity(
+                await (new ProducingAsset.Entity(
                     event.returnValues._assetId,
                     this.props.configuration
                 ).sync())
@@ -135,7 +137,7 @@ export class AppContainer extends React.Component<AppContainerProps, {}> {
 
         assetContractEventHandler.onEvent('LogAssetSetActive', async (event: any) =>
             this.props.actions.producingAssetCreatedOrUpdated(
-                await (new EwAsset.ProducingAsset.Entity(
+                await (new ProducingAsset.Entity(
                     event.returnValues._assetId,
                     this.props.configuration
                 ).sync())
@@ -144,7 +146,7 @@ export class AppContainer extends React.Component<AppContainerProps, {}> {
 
         assetContractEventHandler.onEvent('LogAssetSetInactive', async (event: any) =>
             this.props.actions.producingAssetCreatedOrUpdated(
-                await (new EwAsset.ProducingAsset.Entity(
+                await (new ProducingAsset.Entity(
                     event.returnValues._assetId,
                     this.props.configuration
                 ).sync())
@@ -177,19 +179,31 @@ export class AppContainer extends React.Component<AppContainerProps, {}> {
         }
 
         const blockchainProperties: General.Configuration.BlockchainProperties = await OriginIssuer
-            .createBlockchainProperties(null, web3, originIssuerContractLookupAddress) as any;
+            .createBlockchainProperties(null, web3, originIssuerContractLookupAddress);
+
+        blockchainProperties.producingAssetLogicInstance = await this.getProducingAssetLogicInstance(originIssuerContractLookupAddress, web3)
 
         console.log(blockchainProperties);
 
         return {
             blockchainProperties,
             offChainDataSource: {
-                baseUrl: 'http://localhost:3030'
+                baseUrl: API_BASE_URL
             },
 
             logger: null
         };
 
+    }
+
+    async getProducingAssetLogicInstance(originIssuerContractLookupAddress : string, web3 : Web3) {
+        const response = await fetch(`${API_BASE_URL}/OriginContractLookupAssetLookupMapping/${originIssuerContractLookupAddress.toLowerCase()}`)
+              
+        const json = await response.json();
+
+        const assetBlockchainProperties: General.Configuration.BlockchainProperties = await createBlockchainProperties(null, web3, json.assetContractLookup) as any;
+
+        return assetBlockchainProperties.producingAssetLogicInstance;
     }
 
     async componentDidMount(): Promise<void> {
@@ -202,13 +216,13 @@ export class AppContainer extends React.Component<AppContainerProps, {}> {
             await (new EwUser.User(accounts[0], conf as any)).sync() :
             null;
 
-        (await EwAsset.ProducingAsset.getAllAssets(conf))
-            .forEach((p: EwAsset.ProducingAsset.Entity) =>
+        (await ProducingAsset.getAllAssets(conf))
+            .forEach((p: ProducingAsset.Entity) =>
                 this.props.actions.producingAssetCreatedOrUpdated(p)
             );
 
-        (await EwAsset.ConsumingAsset.getAllAssets(conf))
-            .forEach((c: EwAsset.ConsumingAsset.Entity) =>
+        (await ConsumingAsset.getAllAssets(conf))
+            .forEach((c: ConsumingAsset.Entity) =>
                 this.props.actions.consumingAssetCreatedOrUpdated(c)
             );
 

@@ -16,8 +16,8 @@
 // @authors: slock.it GmbH, Heiko Burkhardt, heiko.burkhardt@slock.it
 
 import * as React from 'react';
-import * as OriginIssuer from 'ew-origin-lib';
-import * as EwAsset from 'ew-asset-registry-lib';
+import * as OriginIssuer from 'ew-origin-lib-sonnen';
+import * as EwAsset from 'ew-asset-registry-lib-sonnen';
 import * as EwUser from 'ew-user-registry-lib';
 import * as General from 'ew-utils-general-lib';
 import { OrganizationFilter } from './OrganizationFilter';

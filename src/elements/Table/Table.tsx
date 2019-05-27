@@ -12,7 +12,7 @@ import renderHTML  from 'react-render-html';
 import moment from 'moment';
 import action from '../../../assets/action.svg';
 import { PeriodToSeconds } from '../../components/DemandTable';
-import * as EwAsset from 'ew-asset-registry-lib'; 
+import * as EwAsset from 'ew-asset-registry-lib-sonnen'; 
 
 import './toggle.scss';
 import './Table.scss';
