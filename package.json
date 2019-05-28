@@ -1,5 +1,5 @@
 {
-  "name": "ewf-coo-ui",
+  "name": "sonne-edis-poc-ui",
   "version": "1.0.0",
   "directories": {
     "test": "test"
@@ -9,15 +9,6 @@
     "start": "node --max-old-space-size=8192 node_modules/webpack-dev-server/bin/webpack-dev-server.js  --output-public-path=/dist/ -d --watch",
     "build": "webpack --config webpack.config.js"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/slockit/ewf-coo-ui.git"
-  },
-  "author": "",
-  "bugs": {
-    "url": "https://github.com/slockit/ewf-coo-ui/issues"
-  },
-  "homepage": "https://github.com/slockit/ewf-coo-ui#readme",
   "devDependencies": {
     "@types/core-js": "0.9.46",
     "@types/googlemaps": "3.36.0",
@@ -44,11 +35,14 @@
     "@types/redux-actions": "2.6.1",
     "@types/underscore": "1.8.18",
     "@types/web3": "1.0.14",
-    "ew-asset-registry-lib-sonnen": "0.2.0",
+    "ew-asset-registry-contracts-sonnen": "0.2.0",
+    "ew-asset-registry-lib-sonnen": "github:energywebfoundation/ew-asset-registry-lib-sonnen#f6dd5e2",
+    "ew-market-contracts-sonnen": "0.2.0",
     "ew-market-lib": "0.3.1",
+    "ew-origin-contracts-sonnen": "0.2.0",
     "ew-origin-lib-sonnen": "0.2.0",
     "ew-user-registry-lib": "0.0.99",
-    "ew-utils-general-lib": "0.3.1",
+    "ew-utils-general-lib-sonnen": "0.2.0",
     "extract-text-webpack-plugin": "4.0.0-beta.0",
     "file-loader": "1.1.11",
     "immutability-helper": "2.9.1",

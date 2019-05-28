@@ -17,7 +17,7 @@
 
 import * as React from 'react';
 import FadeIn from 'react-fade-in';
-import * as General from 'ew-utils-general-lib';
+import * as General from 'ew-utils-general-lib-sonnen';
 import * as marker from '../../assets/marker.svg';
 import * as map from '../../assets/map.svg';
 import * as wind from '../../assets/icon_wind.svg';

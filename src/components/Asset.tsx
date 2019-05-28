@@ -16,7 +16,7 @@
 // @authors: slock.it GmbH, Heiko Burkhardt, heiko.burkhardt@slock.it
 
 import * as React from 'react';
-import * as General from 'ew-utils-general-lib';
+import * as General from 'ew-utils-general-lib-sonnen';
 import * as OriginIssuer from 'ew-origin-lib-sonnen';
 import * as Market from 'ew-market-lib';
 import * as EwUser from 'ew-user-registry-lib';

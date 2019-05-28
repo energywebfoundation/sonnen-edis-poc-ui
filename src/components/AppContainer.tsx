@@ -28,14 +28,17 @@ import { Footer } from './Footer';
 // import { Legal } from './Legal';
 // import { About } from './About';
 import { Asset } from './Asset';
-// import { Admin } from './Admin';
+import { Admin } from './Admin';
 import * as queryString from 'query-string';
 import './AppContainer.scss';
-import * as General from 'ew-utils-general-lib';
+import * as General from 'ew-utils-general-lib-sonnen';
 import * as OriginIssuer from 'ew-origin-lib-sonnen';
-import * as Market from 'ew-market-lib';
-import { ProducingAsset, createBlockchainProperties, ConsumingAsset } from "ew-asset-registry-lib-sonnen";
+import { Demand, createBlockchainProperties as marketCreateBlockchainProperties } from 'ew-market-lib';
+import { ProducingAsset, createBlockchainProperties as assetCreateBlockchainProperties, ConsumingAsset } from 'ew-asset-registry-lib-sonnen';
 import * as EwUser from 'ew-user-registry-lib';
+import { CreateSupply } from './CreateSupply';
+import { CreateDemand } from './CreateDemand';
+import { OriginContractLookup } from 'ew-origin-contracts-sonnen';
 
 interface AppContainerProps extends StoreState {
     actions: Actions;
@@ -49,8 +52,9 @@ export class AppContainer extends React.Component<AppContainerProps, {}> {
         super(props);
 
         this.CertificateTable = this.CertificateTable.bind(this);
+
         // this.DemandTable = this.DemandTable.bind(this);
-        // this.Admin = this.Admin.bind(this);
+        this.Admin = this.Admin.bind(this);
         this.Asset = this.Asset.bind(this);
     }
 
@@ -100,7 +104,7 @@ export class AppContainer extends React.Component<AppContainerProps, {}> {
 
         demandContractEventHandler.onEvent('LogDemandFullyCreated', async (event: any) =>
             this.props.actions.demandCreatedOrUpdated(
-                await (new Market.Demand.Entity(
+                await (new Demand.Entity(
                     event.returnValues._demandId,
                     this.props.configuration).sync()
                 )
@@ -181,7 +185,11 @@ export class AppContainer extends React.Component<AppContainerProps, {}> {
         const blockchainProperties: General.Configuration.BlockchainProperties = await OriginIssuer
             .createBlockchainProperties(null, web3, originIssuerContractLookupAddress);
 
+        const lookup = new OriginContractLookup(web3, originIssuerContractLookupAddress);
+
         blockchainProperties.producingAssetLogicInstance = await this.getProducingAssetLogicInstance(originIssuerContractLookupAddress, web3)
+        blockchainProperties.marketLogicInstance = await this.getMarketLogicInstance(originIssuerContractLookupAddress, web3);
+        (blockchainProperties as any).originLogicRegistryAddress = await lookup.originLogicRegistry();
 
         console.log(blockchainProperties);
 
@@ -191,7 +199,11 @@ export class AppContainer extends React.Component<AppContainerProps, {}> {
                 baseUrl: API_BASE_URL
             },
 
-            logger: null
+            logger: {
+                verbose() {
+                    console.log(...arguments);
+                }
+            } as any
         };
 
     }
@@ -201,9 +213,19 @@ export class AppContainer extends React.Component<AppContainerProps, {}> {
               
         const json = await response.json();
 
-        const assetBlockchainProperties: General.Configuration.BlockchainProperties = await createBlockchainProperties(null, web3, json.assetContractLookup) as any;
+        const assetBlockchainProperties: General.Configuration.BlockchainProperties = await assetCreateBlockchainProperties(null, web3, json.assetContractLookup) as any;
 
         return assetBlockchainProperties.producingAssetLogicInstance;
+    }
+
+    async getMarketLogicInstance(originIssuerContractLookupAddress : string, web3 : Web3) {
+        const response = await fetch(`${API_BASE_URL}/OriginContractLookupMarketLookupMapping/${originIssuerContractLookupAddress.toLowerCase()}`)
+              
+        const json = await response.json();
+
+        const marketBlockchainProperties: General.Configuration.BlockchainProperties = await marketCreateBlockchainProperties(null, web3, json.marketContractLookup) as any;
+
+        return marketBlockchainProperties.marketLogicInstance;
     }
 
     async componentDidMount(): Promise<void> {
@@ -274,13 +296,15 @@ export class AppContainer extends React.Component<AppContainerProps, {}> {
     //     />;
     // }
 
-    // Admin() {
-    //     return <Admin
-    //         conf={this.props.conf}
-    //         currentUser={this.props.currentUser}
-    //         baseUrl={(this.props as any).match.params.contractAddress}
-    //     />;
-    // }
+    Admin() {
+        return <Admin
+            baseUrl={(this.props as any).match.params.contractAddress}
+            producingAssets={this.props.producingAssets}
+            certificates={this.props.certificates}
+            configuration={this.props.configuration}
+            currentUser={this.props.currentUser}
+        />;
+    }
 
     render(): JSX.Element {
 
@@ -294,9 +318,9 @@ export class AppContainer extends React.Component<AppContainerProps, {}> {
 
                 <Route path={'/' + (this.props as any).match.params.contractAddress + '/assets/'} component={this.Asset} />
                 <Route path={'/' + (this.props as any).match.params.contractAddress + '/certificates'} component={this.CertificateTable} />
-                {/* <Route path={'/' + (this.props as any).match.params.contractAddress + '/admin/'} component={this.Admin} />
+                <Route path={'/' + (this.props as any).match.params.contractAddress + '/admin/'} component={this.Admin} />
                 
-                <Route path={'/' + (this.props as any).match.params.contractAddress + '/demands'} component={this.DemandTable} />
+                {/*<Route path={'/' + (this.props as any).match.params.contractAddress + '/demands'} component={this.DemandTable} />
           
                 <Route path={'/' + (this.props as any).match.params.contractAddress + '/legal'} component={Legal} />
                 <Route path={'/' + (this.props as any).match.params.contractAddress + '/about'} component={About} /> */}

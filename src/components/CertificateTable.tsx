@@ -19,7 +19,7 @@ import * as React from 'react';
 import * as OriginIssuer from 'ew-origin-lib-sonnen';
 import * as EwAsset from 'ew-asset-registry-lib-sonnen';
 import * as EwUser from 'ew-user-registry-lib';
-import * as General from 'ew-utils-general-lib';
+import * as General from 'ew-utils-general-lib-sonnen';
 import { OrganizationFilter } from './OrganizationFilter';
 import { Table } from '../elements/Table/Table';
 import TableUtils from '../elements/utils/TableUtils';

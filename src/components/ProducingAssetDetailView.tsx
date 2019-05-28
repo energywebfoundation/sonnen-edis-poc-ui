@@ -25,7 +25,7 @@ import hydro from '../../assets/icon_hydro.svg';
 import solar from '../../assets/icon_solar.svg';
 import moment from 'moment';
 import { BrowserRouter, Route, Link } from 'react-router-dom';
-import * as General from 'ew-utils-general-lib';
+import * as General from 'ew-utils-general-lib-sonnen';
 import * as OriginIssuer from 'ew-origin-lib-sonnen';
 import * as Market from 'ew-market-lib';
 import * as EwUser from 'ew-user-registry-lib';

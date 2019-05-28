@@ -15,84 +15,186 @@
 // //
 // // @authors: slock.it GmbH, Heiko Burkhardt, heiko.burkhardt@slock.it
 
-// import * as React from 'react'
-// import { Nav } from 'react-bootstrap'
-// import FadeIn from 'react-fade-in'
+import * as React from 'react'
+import { Nav } from 'react-bootstrap'
+import FadeIn from 'react-fade-in'
+import * as OriginIssuer from 'ew-origin-lib-sonnen';
+import * as EwAsset from 'ew-asset-registry-lib-sonnen'; 
+import * as EwUser from 'ew-user-registry-lib';
+import * as General from 'ew-utils-general-lib-sonnen';
+import {
+  NavLink,
+  Redirect,
+  Route,
+  withRouter
+} from 'react-router-dom'
 
-// import {
-//   NavLink,
-//   Redirect,
-//   Route,
-//   withRouter
-// } from 'react-router-dom'
+import { PageContent } from '../elements/PageContent/PageContent'
+import { CreateSupply } from './CreateSupply';
+import { CreateDemand } from './CreateDemand';
+import { CreateAgreement } from './CreateAgreement';
+import { ListDemands } from './ListDemands';
+import { MarketLogic } from 'ew-market-contracts-sonnen';
+import { ListSupplies } from './ListSupplies';
+import { SaveSmartMeterRead } from './SaveSmartMeterRead';
+import { ApproveCertificate } from './ApproveCertificate';
 
-// import { PageContent } from '../elements/PageContent/PageContent'
-// import { OnboardDemand } from './OnboardDemand'
-// import { Web3Service } from '../utils/Web3Service'
-// import { User } from 'ewf-coo'
+export interface AdminProps {
+    configuration: General.Configuration.Entity;
+    certificates: OriginIssuer.Certificate.Entity[];
+    producingAssets: EwAsset.ProducingAsset.Entity[];
+    currentUser: EwUser.User;
+    baseUrl: string;
+}
 
-// export interface AdminProps {
-//   web3Service: Web3Service,
-//   currentUser: User,
-//   baseUrl: string
-// }
+export class Admin extends React.Component<AdminProps, {}> {
 
-// export class Admin extends React.Component<AdminProps, {}> {
+  constructor(props) {
+    super(props);
 
-//   constructor(props) {
-//     super(props)
-//     this.OnboardDemand = this.OnboardDemand.bind(this)
+    this.CreateSupplySection = this.CreateSupplySection.bind(this);
+    this.CreateDemandSection = this.CreateDemandSection.bind(this);
+    this.CreateAgreementSection = this.CreateAgreementSection.bind(this);
+    this.ListDemandsSection = this.ListDemandsSection.bind(this);
+    this.ListSuppliesSection = this.ListSuppliesSection.bind(this);
+    this.SaveSmartMeterReadSection = this.SaveSmartMeterReadSection.bind(this);
+    this.ApproveCertificateSection = this.ApproveCertificateSection.bind(this);
+  }
 
-//   }
+  CreateSupplySection() {
+    return <CreateSupply
+        baseUrl={this.props.baseUrl}
+        producingAssets={this.props.producingAssets}
+        certificates={this.props.certificates}
+        conf={this.props.configuration}
+        currentUser={this.props.currentUser}
+    />;
+}
 
-//   OnboardDemand() {
+CreateDemandSection() {
+    return <CreateDemand
+        baseUrl={this.props.baseUrl}
+        producingAssets={this.props.producingAssets}
+        certificates={this.props.certificates}
+        conf={this.props.configuration}
+        currentUser={this.props.currentUser}
+    />;
+}
 
-//     return <OnboardDemand web3Service={this.props.web3Service} currentUser={this.props.currentUser} />
-//   }
+CreateAgreementSection() {
+    return <CreateAgreement
+        baseUrl={this.props.baseUrl}
+        producingAssets={this.props.producingAssets}
+        certificates={this.props.certificates}
+        conf={this.props.configuration}
+        currentUser={this.props.currentUser}
+    />;
+}
 
-//   render() {
+ListDemandsSection() {
+  return <ListDemands
+      baseUrl={this.props.baseUrl}
+      producingAssets={this.props.producingAssets}
+      certificates={this.props.certificates}
+      conf={this.props.configuration}
+      currentUser={this.props.currentUser}
+  />;
+}
 
-//     const AdminMenu = [
-//       {
-//         key: 'onboard_demand',
-//         label: 'Onboard demand',
-//         component: this.OnboardDemand
-//       }, {
-//         key: 'onboard_user',
-//         label: 'Onboard user',
-//         component: null
-//       }, {
-//         key: 'onborad_assets',
-//         label: 'Onboard assets',
-//         component: null
-//       }
-//     ]
+ListSuppliesSection() {
+  return <ListSupplies
+      baseUrl={this.props.baseUrl}
+      producingAssets={this.props.producingAssets}
+      certificates={this.props.certificates}
+      conf={this.props.configuration}
+      currentUser={this.props.currentUser}
+  />;
+}
 
-//     const { match } = this.props as any
-//     const baseUrl = this.props.baseUrl
-//     return (
-//       <div className='PageWrapper'>
-//         <div className='PageNav'>
-//           <Nav className='NavMenu'>
-//             {
+SaveSmartMeterReadSection() {
+  return <SaveSmartMeterRead
+      baseUrl={this.props.baseUrl}
+      producingAssets={this.props.producingAssets}
+      certificates={this.props.certificates}
+      conf={this.props.configuration}
+      currentUser={this.props.currentUser}
+  />;
+}
 
-//               AdminMenu.map(menu => {
-//                 return (<li><NavLink exact to={`/${baseUrl}/admin/${menu.key}`} activeClassName='active'>{menu.label}</NavLink></li>)
-//               })
-//             }
-//           </Nav>
-//         </div>
+ApproveCertificateSection() {
+  return <ApproveCertificate
+      baseUrl={this.props.baseUrl}
+      producingAssets={this.props.producingAssets}
+      certificates={this.props.certificates}
+      conf={this.props.configuration}
+      currentUser={this.props.currentUser}
+  />;
+}
 
-//         <Route path={`/${baseUrl}/admin/:key`} render={props => {
-//           const key = props.match.params.key
-//           const matches = AdminMenu.filter(item => {
-//             return item.key === key
-//           })
-//           return (<PageContent menu={matches.length > 0 ? matches[0] : null} redirectPath={`${baseUrl}/admin`} />)
-//         }} />
-//         <Route exact path={`/${baseUrl}/admin`} render={props => (<Redirect to={{ pathname: `/${baseUrl}/admin/${AdminMenu[0].key}` }} />)} />
+  render() {
+    const AdminMenu = [
+      {
+        key: 'create-supply',
+        label: 'Create Supply',
+        component: this.CreateSupplySection
+      },
+      {
+        key: 'create-demand',
+        label: 'Create Demand',
+        component: this.CreateDemandSection
+      },
+      {
+        key: 'create-agreement',
+        label: 'Create Agreement',
+        component: this.CreateAgreementSection
+      },
+      {
+        key: 'demands',
+        label: 'Demands',
+        component: this.ListDemandsSection
+      },
+      {
+        key: 'supplies',
+        label: 'Supplies',
+        component: this.ListSuppliesSection
+      },
+      {
+        key: 'save-smart-meter-read',
+        label: 'Save SMeter Read',
+        component: this.SaveSmartMeterReadSection
+      },
+      {
+        key: 'approve-certificate',
+        label: 'Approve Certificate',
+        component: this.ApproveCertificateSection
+      }
+    ]
 
-//       </div>
-//     )
-//   }
-// }
+    const { match } = this.props as any
+    const baseUrl = this.props.baseUrl
+    return (
+      <div className='PageWrapper'>
+        <div className='PageNav'>
+          <Nav className='NavMenu'>
+            {
+
+              AdminMenu.map(menu => {
+                return (<li><NavLink exact to={`/${baseUrl}/admin/${menu.key}`} activeClassName='active'>{menu.label}</NavLink></li>)
+              })
+            }
+          </Nav>
+        </div>
+
+        <Route path={`/${baseUrl}/admin/:key`} render={props => {
+          const key = props.match.params.key
+          const matches = AdminMenu.filter(item => {
+            return item.key === key
+          })
+          return (<PageContent menu={matches.length > 0 ? matches[0] : null} redirectPath={`${baseUrl}/admin`} />)
+        }} />
+        <Route exact path={`/${baseUrl}/admin`} render={props => (<Redirect to={{ pathname: `/${baseUrl}/admin/${AdminMenu[0].key}` }} />)} />
+
+      </div>
+    )
+  }
+}

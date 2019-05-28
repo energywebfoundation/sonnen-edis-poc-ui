@@ -1,6 +1,6 @@
 
 import { Actions } from '../actions/index';
-import * as General from 'ew-utils-general-lib';
+import * as General from 'ew-utils-general-lib-sonnen';
 
 const defaultState = null;
 

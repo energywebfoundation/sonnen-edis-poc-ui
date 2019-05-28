@@ -1,6 +1,6 @@
 // import { Web3Service } from '../utils/Web3Service'
 // import { ProducingAsset, Certificate, Demand, User, EventHandlerManager, ContractEventHandler, ConsumingAsset } from 'ewf-coo'
-import * as General from 'ew-utils-general-lib';
+import * as General from 'ew-utils-general-lib-sonnen';
 import * as EwAsset from 'ew-asset-registry-lib-sonnen'; 
 import * as OriginIssuer from 'ew-origin-lib-sonnen';
 import * as Market from 'ew-market-lib';
