@@ -77,9 +77,9 @@ export class ApproveCertificate extends React.Component<Props, State> {
             reportedFlexibility = this.parseFlexibility(await energyLogic.getReportedFlexibility(
                 certificateId,
                 {
-                    from: this.props.currentUser.id,
-                    privateKey: ''
-            }));
+                    from: this.props.currentUser.id
+                } as any
+            ));
         } catch (error) {
 
         }
