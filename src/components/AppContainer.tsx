@@ -39,12 +39,11 @@ import * as EwUser from 'ew-user-registry-lib';
 import { CreateSupply } from './CreateSupply';
 import { CreateDemand } from './CreateDemand';
 import { OriginContractLookup } from 'ew-origin-contracts-sonnen';
+import { API_BASE_URL } from './config';
 
 interface AppContainerProps extends StoreState {
     actions: Actions;
 }
-
-const API_BASE_URL = 'http://localhost:3030';
 
 export class AppContainer extends React.Component<AppContainerProps, {}> {
 
