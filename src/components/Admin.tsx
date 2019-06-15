@@ -17,7 +17,6 @@
 
 import * as React from 'react'
 import { Nav } from 'react-bootstrap'
-import FadeIn from 'react-fade-in'
 import * as OriginIssuer from 'ew-origin-lib-sonnen';
 import * as EwAsset from 'ew-asset-registry-lib-sonnen'; 
 import * as EwUser from 'ew-user-registry-lib';
@@ -25,8 +24,7 @@ import * as General from 'ew-utils-general-lib-sonnen';
 import {
   NavLink,
   Redirect,
-  Route,
-  withRouter
+  Route
 } from 'react-router-dom'
 
 import { PageContent } from '../elements/PageContent/PageContent'
@@ -34,10 +32,9 @@ import { CreateSupply } from './CreateSupply';
 import { CreateDemand } from './CreateDemand';
 import { CreateAgreement } from './CreateAgreement';
 import { ListDemands } from './ListDemands';
-import { MarketLogic } from 'ew-market-contracts-sonnen';
 import { ListSupplies } from './ListSupplies';
-import { SaveSmartMeterRead } from './SaveSmartMeterRead';
 import { ApproveCertificate } from './ApproveCertificate';
+import { SaveSmartMeterRead } from './SaveSmartMeterRead';
 
 export interface AdminProps {
     configuration: General.Configuration.Entity;
@@ -145,7 +142,7 @@ ApproveCertificateSection() {
       },
       {
         key: 'create-agreement',
-        label: 'Create Agreement',
+        label: 'Activate flexibility',
         component: this.CreateAgreementSection
       },
       {
@@ -158,14 +155,14 @@ ApproveCertificateSection() {
         label: 'Supplies',
         component: this.ListSuppliesSection
       },
-      {
-        key: 'save-smart-meter-read',
-        label: 'Save SMeter Read',
-        component: this.SaveSmartMeterReadSection
-      },
+      // {
+      //   key: 'save-smart-meter-read',
+      //   label: 'Save SMeter Read',
+      //   component: this.SaveSmartMeterReadSection
+      // },
       {
         key: 'approve-certificate',
-        label: 'Approve Certificate',
+        label: 'Approve reported data',
         component: this.ApproveCertificateSection
       }
     ]

@@ -88,7 +88,7 @@ export class ListSupplies extends React.Component<Props, State> {
                 key: 'total',
                 colspan: 7,
             },
-            generateFooter('Power in Wh', true)
+            generateFooter('Power in kW', true)
         ]
 
         const data = this.state.supplies.map((supply, id) => {
@@ -99,8 +99,8 @@ export class ListSupplies extends React.Component<Props, State> {
                 moment(supply._dateTimeFrom, 'x').format("DD MMM YYYY HH:mm"),
                 moment(supply._dateTimeTo, 'x').format("DD MMM YYYY HH:mm"),
                 supply._price,
-                supply._matchedPower,
-                supply._power
+                supply._matchedPower / 1000,
+                supply._power / 1000
             ];
         });
 
@@ -110,9 +110,9 @@ export class ListSupplies extends React.Component<Props, State> {
             generateHeader('Region ID'),
             generateHeader('Timeframe Start Time'),
             generateHeader('Timeframe End Time'),
-            generateHeader('Price in EUR'),
-            generateHeader('Matched Power in Wh'),
-            generateHeader('Power in Wh', defaultWidth, true, true)
+            generateHeader('Price in cents'),
+            generateHeader('Matched Power in kW'),
+            generateHeader('Power in kW', defaultWidth, true, true)
         ]
 
         return <div className='ForSaleWrapper'>

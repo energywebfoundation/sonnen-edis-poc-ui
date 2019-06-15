@@ -98,9 +98,9 @@ export class CreateSupply extends React.Component<CreateSupplyProps, CreateSuppl
             <br/><br/>
             <Datepicker onChange={this.onTimeChange('timeFrameEndTimestamp')} />
             <br/><br/>
-            <input className="CreateSupply_input" onChange={(e) => this.setState({ powerInWh: parseInt(e.target.value, 10) })} placeholder="Power in Wh"/>            
+            <input className="CreateSupply_input" onChange={(e) => this.setState({ powerInWh: parseInt(e.target.value, 10) * 1000 })} placeholder="Power in kW"/>            
             <br/><br/>
-            <input className="CreateSupply_input" onChange={(e) => this.setState({ price: parseInt(e.target.value, 10) })} placeholder="Price in EUR"/>            
+            <input className="CreateSupply_input" onChange={(e) => this.setState({ price: parseInt(e.target.value, 10) })} placeholder="Price in cents"/>            
             <br/><br/>
             <button onClick={() => this.createSupply(
                 assetId,

@@ -91,7 +91,7 @@ export class CreateDemand extends React.Component<CreateDemandProps, CreateDeman
             <br/><br/>
             <Datepicker onChange={this.onTimeChange('timeFrameEndTimestamp')} />
             <br/><br/>
-            <input className="CreateSupply_input" onChange={(e) => this.setState({ powerInWh: parseInt(e.target.value, 10) })} placeholder="Power in Wh"/>            
+            <input className="CreateSupply_input" onChange={(e) => this.setState({ powerInWh: parseInt(e.target.value, 10) * 1000 })} placeholder="Power in kW"/>            
             <br/><br/>
             <button onClick={() => this.createDemand(
                 regionId,

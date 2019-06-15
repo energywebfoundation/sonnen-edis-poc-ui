@@ -92,12 +92,16 @@ export class ApproveCertificate extends React.Component<Props, State> {
     parseFlexibility(flexibility): string {
         const information = [];
 
+        console.log('parseFlexibility', {
+            flexibility
+        });
+
         if (typeof(flexibility._reportConfirmed) !== 'undefined') {
             information.push(`Report confirmed: ${flexibility._reportConfirmed}`);
         }
 
         if (typeof(flexibility._energyAmount) !== 'undefined') {
-            information.push(`Energy amount: ${flexibility._energyAmount} Wh`);
+            information.push(`Energy amount: ${!isNaN(parseInt(flexibility._energyAmount, 10)) ? `${flexibility._energyAmount / 1000} kW` : ''}`);
         }
 
         if (typeof(flexibility._dateTimeFrom) !== 'undefined') {
@@ -109,7 +113,7 @@ export class ApproveCertificate extends React.Component<Props, State> {
         }
 
         if (typeof(flexibility._averagePower) !== 'undefined') {
-            information.push(`Average power: ${flexibility._averagePower} Wh`);
+            information.push(`Average power: ${!isNaN(parseInt(flexibility._averagePower, 10)) ? `${flexibility._averagePower / 1000} kW` : ''}`);
         }
 
         if (typeof(flexibility._activationId) !== 'undefined') {

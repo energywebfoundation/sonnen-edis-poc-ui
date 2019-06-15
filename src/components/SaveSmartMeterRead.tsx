@@ -113,7 +113,7 @@ export class SaveSmartMeterRead extends React.Component<Props, State> {
             <br/><br/>
             <Datepicker onChange={this.onTimeChange('timeFrameEndTimestamp')} />
             <br/><br/>
-            <input className="CreateSupply_input" onChange={(e) => this.setState({ averagePower: parseInt(e.target.value, 10) })} placeholder="Average Power in Wh"/>            
+            <input className="CreateSupply_input" onChange={(e) => this.setState({ averagePower: parseInt(e.target.value, 10) * 1000 })} placeholder="Average Power in kW"/>            
             <br/><br/>
             <input className="CreateSupply_input" onChange={(e) => this.setState({ powerProfileURL: e.target.value ? e.target.value.trim() : e.target.value })} placeholder="powerProfileURL (optional) "/>
             <br/><br/>
