@@ -5,6 +5,7 @@ import * as EwUser from 'ew-user-registry-lib';
 import * as General from 'ew-utils-general-lib-sonnen';
 import mqtt from 'mqtt';
 import { MarketLogic } from 'ew-market-contracts-sonnen';
+import { SonnenProducingAssetLogic } from 'ew-asset-registry-contracts-sonnen';
 
 import './CreateSupply.scss'
 import moment = require('moment');
@@ -32,6 +33,26 @@ export class CreateAgreement extends React.Component<CreateAgreementProps, Creat
             demandId: -1,
             supplyId: -1
         };
+    }
+
+    async clearAsset(
+        assetId: number
+    ) {
+        this.props.conf.blockchainProperties.activeUser = {
+            address: this.props.currentUser.id
+        };
+
+        const assetRegistry = new SonnenProducingAssetLogic(
+            this.props.conf.blockchainProperties.web3,
+            this.props.conf.blockchainProperties.producingAssetLogicInstance.web3Contract._address
+        );
+            
+        await assetRegistry.clearSonnenAsset(
+            assetId,
+            {
+                from: this.props.currentUser.id,
+                privateKey: ''
+            });
     }
 
     async createAgreement(
@@ -64,16 +85,38 @@ export class CreateAgreement extends React.Component<CreateAgreementProps, Creat
             supply
         });
 
+        try {
+            await this.clearAsset(parseInt(supply._assetId, 10));
+        } catch (error) {
+            console.error('Clearing supply failed', error);
+        }
+
+        console.log('Attempt to create on-chain agreement');
         await marketLogic.createAgreement(demandId, supplyId, {
             from: this.props.currentUser.id,
             privateKey: ''
         });
 
+        // from > 10 seconds
+        // to > from + 1 minute
+
+        const MIN_FROM = moment().add('10', 'seconds');
+        const MIN_TO = MIN_FROM.clone().add('1', 'minute');
+
+        const from = demand._dataTimeFrom ? moment.max(moment(demand._dataTimeFrom, 'x'), MIN_FROM) : MIN_FROM;
+        const to = demand._dateTimeTo ? moment.max(moment(demand._dateTimeTo, 'x'), from.clone().add('1', 'minute')) : MIN_TO;
+
+        console.log('createAgreement', {
+            c: moment().toISOString(),
+            from: from.toISOString(),
+            to: to.toISOString()
+        });
+
         try {
             this.postToMQTT(
                 parseInt(supply._assetId),
-                moment(demand._dataTimeFrom, 'x').toISOString(),
-                moment(demand._dateTimeTo, 'x').toISOString()
+                from.toISOString(),
+                to.toISOString()
             );
         } catch (error) {  
             console.error('Error while posting to MQTT', error);
