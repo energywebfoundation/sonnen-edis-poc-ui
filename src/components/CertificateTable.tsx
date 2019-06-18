@@ -272,7 +272,7 @@ export class CertificateTable extends React.Component<CertificateTableProps, Cer
                 new Date(enrichedCertificateData.producingAsset.offChainProperties.operationalSince * 1000).toDateString(),
                 enrichedCertificateData.producingAsset.offChainProperties.gpsLongitude +
                 ' ' + enrichedCertificateData.producingAsset.offChainProperties.gpsLatitude,
-                enrichedCertificateData.producingAsset.offChainProperties.city +
+                enrichedCertificateData.producingAsset.offChainProperties.region +
                 ', ' + enrichedCertificateData.producingAsset.offChainProperties.country,
 
                 EwAsset.ProducingAsset.Compliance[enrichedCertificateData.producingAsset.offChainProperties.complianceRegistry],
@@ -289,7 +289,7 @@ export class CertificateTable extends React.Component<CertificateTableProps, Cer
             generateHeader('Asset Type'),
             generateHeader('Commissioning Date'),
             generateHeader('Geo Location'),
-            generateHeader('Town, Country'),
+            generateHeader('Region, Country'),
             // generateHeader('Max Capacity (kWh)', defaultWidth, true),
             generateHeader('Compliance'),
             generateHeader('Certification Date'),

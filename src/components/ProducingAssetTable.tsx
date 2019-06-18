@@ -127,7 +127,7 @@ export class ProducingAssetTable extends React.Component<ProducingAssetTableProp
         const TableHeader: any[] = [
             generateHeader('#', 137.11),
             generateHeader('Owner', 136),
-            generateHeader('Town, Country', 136),
+            generateHeader('Region, Country', 136),
             generateHeader('Type', 72),
             generateHeader('Nameplate Capacity (kW)', 125.45, true),
             generateHeader('Meter Read (kWh)', 135.89, true)
@@ -175,7 +175,7 @@ export class ProducingAssetTable extends React.Component<ProducingAssetTableProp
             return ([
                 producingAsset.id,
                 enrichedProducingAssetData.organizationName,
-                (producingAsset.offChainProperties.city + ', ' + producingAsset.offChainProperties.country),
+                (producingAsset.offChainProperties.region + ', ' + producingAsset.offChainProperties.country),
                 EwAsset.ProducingAsset.Type[producingAsset.offChainProperties.assetType],
                 (producingAsset.offChainProperties.capacityWh / 1000).toFixed(3),
                 (producingAsset.lastSmartMeterReadWh / 1000).toFixed(3)

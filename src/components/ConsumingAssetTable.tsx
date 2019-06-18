@@ -119,7 +119,7 @@ export class ConsumingAssetTable extends React.Component<ConsumingAssetTableProp
         const TableHeader = [
             generateHeader('#', 145.98),
             generateHeader('Owner'),
-            generateHeader('Town, Country'),
+            generateHeader('Region, Country'),
             generateHeader('Nameplate Capacity (kW)', defaultWidth, true),
             generateHeader('Consumption (kWh)', defaultWidth, true)
         ];
@@ -157,7 +157,7 @@ export class ConsumingAssetTable extends React.Component<ConsumingAssetTableProp
             return [
                 consumingAsset.id,
                 enrichedConsumingAssetData.organizationName,
-                consumingAsset.offChainProperties.city + ', ' + consumingAsset.offChainProperties.country,
+                consumingAsset.offChainProperties.region + ', ' + consumingAsset.offChainProperties.country,
                 consumingAsset.offChainProperties.capacityWh ? 
                 (consumingAsset.offChainProperties.capacityWh / 1000).toFixed(3) : '-',
                 (consumingAsset.lastSmartMeterReadWh / 1000).toFixed(3),
